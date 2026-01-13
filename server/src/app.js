@@ -76,6 +76,13 @@ app.post('/api/trigger-weekly', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+// Catch-all for undefined routes
+app.use((req, res) => {
+    console.log(`[404] Route not found: ${req.method} ${req.path}`);
+    res.status(404).send(`Route not found: ${req.path}`);
+});
+
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Debug: Listening on 0.0.0.0:${PORT}`);
 });
