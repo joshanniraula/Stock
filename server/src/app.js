@@ -20,15 +20,24 @@ app.use(express.json());
 
 // Debug Middleware
 app.use((req, res, next) => {
-    console.log(`[Request] ${req.method} ${req.path}`);
-    // SANITY CHECK: Uncomment to force a response
-    // return res.send(`SANITY CHECK: Path=${req.path}`);
+    console.log(`[Flow] 1. Request Received: ${req.method} ${req.path}`);
     next();
 });
 
-// Root Route
+app.use((req, res, next) => {
+    console.log(`[Flow] 2. Passing CORS/JSON`);
+    next();
+});
+
+// Root Route - MOVED UP and LOGGING ADDED
 app.get('/', (req, res) => {
-    res.send('Backend is running!');
+    console.log(`[Flow] 3. Inside Root Route Handler`);
+    res.status(200).send('Backend is running!');
+});
+
+app.use((req, res, next) => {
+    console.log(`[Flow] 4. Post-Root (Checking other routes)`);
+    next();
 });
 
 const marketController = require('./controllers/marketController');
