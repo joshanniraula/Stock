@@ -21,6 +21,8 @@ class NepseService {
         let browser;
         try {
             console.log('Cache expired or empty. Launching browser for scraping...');
+            console.log('Debug: PUPPETEER_CACHE_DIR =', process.env.PUPPETEER_CACHE_DIR);
+
             browser = await puppeteer.launch({
                 headless: 'new',
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
