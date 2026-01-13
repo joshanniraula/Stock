@@ -15,29 +15,33 @@ const weeklyJob = require('./jobs/weeklyJob');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const allowedOrigins = [
+    'https://missionstock.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5000'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) === -1) {
+            // If the origin is not in the allowed list, default to allowing it for now to avoid breakers, 
+            // OR stricter: return callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'), false);
+            // For this user's debugging phase, let's keep it PERMISSIVE but Explicit to ensure headers are sent.
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 
-// Debug Middleware
-app.use((req, res, next) => {
-    console.log(`[Flow] 1. Request Received: ${req.method} ${req.path}`);
-    next();
-});
-
-app.use((req, res, next) => {
-    console.log(`[Flow] 2. Passing CORS/JSON`);
-    next();
-});
-
-// Root Route - MOVED UP and LOGGING ADDED
+// Root Route
 app.get('/', (req, res) => {
-    console.log(`[Flow] 3. Inside Root Route Handler`);
     res.status(200).send('Backend is running!');
-});
-
-app.use((req, res, next) => {
-    console.log(`[Flow] 4. Post-Root (Checking other routes)`);
-    next();
 });
 
 const marketController = require('./controllers/marketController');
