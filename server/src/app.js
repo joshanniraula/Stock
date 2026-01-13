@@ -21,6 +21,8 @@ app.use(express.json());
 // Debug Middleware
 app.use((req, res, next) => {
     console.log(`[Request] ${req.method} ${req.path}`);
+    // SANITY CHECK: Uncomment to force a response
+    return res.send(`SANITY CHECK: Path=${req.path}`);
     next();
 });
 
