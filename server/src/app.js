@@ -18,6 +18,17 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Debug Middleware
+app.use((req, res, next) => {
+    console.log(`[Request] ${req.method} ${req.path}`);
+    next();
+});
+
+// Root Route
+app.get('/', (req, res) => {
+    res.send('Backend is running!');
+});
+
 const marketController = require('./controllers/marketController');
 
 // Routes
